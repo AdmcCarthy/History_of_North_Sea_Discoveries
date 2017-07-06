@@ -31,7 +31,7 @@ Design Approach
 Following exploratory data analysis of the North Sea NPD dataset
 the approach is to create an author driven narrative.
 
-The author driven narrative part will demonstrate that overtime the size
+The author driven narrative  will demonstrate that overtime the size
 of discoveries have decreased apart from one major exception.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -52,6 +52,16 @@ Visualisation development process
 ----
 Data
 ----
+
+Datasets are from the NPD (Norwegian Petroleum Directorate) stored on data.norge (
+
+http://data.norge.no/data/oljedirektoratet/felt-field
+
+Data is stored under the Norwegian Licence for Open Government Data (NLOD)
+
+http://data.norge.no/nlod/en
+
+http://data.norge.no/nlod/en/1.0
 
 ------------
 Work Process

@@ -34,7 +34,7 @@ The author driven narrative  will demonstrate that overtime the amount of hydroc
 
 
 Initial design decisions
-________________________
+------------------------
 
 The initial design choice is a buble chart.
 

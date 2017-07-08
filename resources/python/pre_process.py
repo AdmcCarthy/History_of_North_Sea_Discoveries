@@ -36,37 +36,69 @@ def main():
     stat_file_loc = os.path.join(directory, "data", "status.csv")
     df_status = pd.read_csv(stat_file_loc, sep=';')
 
-    # Calculate cumlative production for each field(groupby category)
-    df_prod["cumalative_prod"] = df_prod.groupby("prfInformationCarrier")["prfPrdOeNetMillSm3"].transform(pd.Series.cumsum)
 
-    def get_reserves(row):
-        """Use in pandas apply.
-    
-        returns a value of reserves
-        for each field name.
-        """
+    def get_oe(df_prod):
+        """Get oil equivelants"""
+        # Calculate cumlative production for each field(groupby category)
+        df_prod["cumalative_prod"] = df_prod.groupby("prfInformationCarrier")["prfPrdOeNetMillSm3"].transform(pd.Series.cumsum)
         
-        if row["prfInformationCarrier"] in df_reserv["fldName"].unique():
-            return float(df_reserv[df_reserv["fldName"] == row["prfInformationCarrier"]]["fldRecoverableOE"])
-        else:
-            return None
+        def get_reserves(row):
+            """Use in pandas apply.
+
+            returns a value of reserves
+            for each field name.
+            """
+
+            if row["prfInformationCarrier"] in df_reserv["fldName"].unique():
+                return float(df_reserv[df_reserv["fldName"] == row["prfInformationCarrier"]]["fldRecoverableOE"])
+            else:
+                return None
+
+        # Add a column containing total reserves for each field
+        df_prod["reserves"] = df_prod.apply(get_reserves, axis=1)
+
+        # Remove any fields without a reserves value
+        df_prod = df_prod.dropna(subset=["reserves"])
+
+        # Subtract cumlative production from reserves
+        df_prod["remaining_oe"] = df_prod["reserves"] - df_prod["cumalative_prod"]
+
+        return df_prod
     
-    # Add a column containing total reserves for each field
-    df_prod["reserves"] = df_prod.apply(get_reserves, axis=1)
+    def get_oil(df_prod):
+        """Get oil"""
+        # Calculate cumlative production for each field(groupby category)
+        df_prod["cumalative_prod"] = df_prod.groupby("prfInformationCarrier")["prfPrdOilNetMillSm3"].transform(pd.Series.cumsum)
+        
+        def get_reserves(row):
+            """Use in pandas apply.
 
-    # Remove any fields without a reserves value
-    df_prod = df_prod.dropna(subset=["reserves"])
+            returns a value of reserves
+            for each field name.
+            """
 
-    # Subtract cumlative production from reserves
-    df_prod["remaining_oe"] = df_prod["reserves"] - df_prod["cumalative_prod"]
+            if row["prfInformationCarrier"] in df_reserv["fldName"].unique():
+                return float(df_reserv[df_reserv["fldName"] == row["prfInformationCarrier"]]["fldRecoverableOil"])
+            else:
+                return None
 
-    print(df_prod.head(100))
+        # Add a column containing total reserves for each field
+        df_prod["reserves"] = df_prod.apply(get_reserves, axis=1)
+
+        # Remove any fields without a reserves value
+        df_prod = df_prod.dropna(subset=["reserves"])
+
+        # Subtract cumlative production from reserves
+        df_prod["remaining_oil"] = df_prod["reserves"] - df_prod["cumalative_prod"]
+
+        return df_prod
+
+    df_prod = get_oil(df_prod)
 
     out_file_loc = os.path.join(directory, "data", "reserves_production.csv")
-    df_prod.to_csv(out_file_loc)
+    df_prod.to_csv(out_file_loc, index=False)
 
     print("Finished")
-
 
 
 if __name__ == '__main__':

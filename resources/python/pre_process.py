@@ -36,10 +36,17 @@ def main():
     df_status = pd.read_csv(stat_file_loc, sep=';')
 
     # Calculate cumlative production for each field(groupby category)
-    df_prod["cumalative_prod"] = df_prod.groupby(("prfInformationCarrier")
-                                                 ["prfPrdOeNetMillSm3"].transform(
-                                                        pd.Series.cumsum))
+    df_prod["cumalative_prod"] = df_prod.groupby("prfInformationCarrier")["prfPrdOeNetMillSm3"].transform(pd.Series.cumsum)
 
+    def get_reserves(row):
+        if row["prfInformationCarrier"] in df_reserv["fldName"].unique():
+            return float(df_reserv[df_reserv["fldName"] == row["prfInformationCarrier"]]["fldRecoverableOE"])
+        else:
+            return "NAN"
+
+    df_prod["reserves"] = df_prod.apply(get_reserves, axis=1)
+
+    print(df_prod.head(100))
     print("Finished")
 
 if __name__ == '__main__':

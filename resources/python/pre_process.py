@@ -35,30 +35,10 @@ def main():
     stat_file_loc = os.path.join(directory, "data", "status.csv")
     df_status = pd.read_csv(stat_file_loc, sep=';')
 
-
-    def cumulative_annual_production():
-        """Returns production as
-        cumulative, to be used in Pandas
-        apply.
-        """
-
-        for field in df_prod["prfInformationCarrier"].unique():
-            print(field)
-
-        values = 1
-
-        return values
-
-    def reserves_subtraction():
-        """To be used in Pandas apply to
-        return values based on reserves subtracting
-        cumulative production"""
-
-        values = 2
-
-        return values
-
-    cumulative_annual_production()
+    # Calculate cumlative production for each field(groupby category)
+    df_prod["cumalative_prod"] = df_prod.groupby(("prfInformationCarrier")
+                                                 ["prfPrdOeNetMillSm3"].transform(
+                                                        pd.Series.cumsum))
 
     print("Finished")
 

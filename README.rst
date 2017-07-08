@@ -84,7 +84,13 @@ http://www.visualisingdata.com/2010/08/making-sense-of-streamgraphs/
 
    Stream graph production per year for each fiel, created using rawgraphs.io
 
+The figure is still quite distracting.
 
+The colours are distracting and do not seperate the categories easily, there are too many labels which do not help convey a narrative.
+
+There is a steep decrease (a decline in total production) at the end of the chart, this is not highlighted cleary enough.
+
+Other technical issues include the years being incorrectly displayed.
 
 Feedback
 --------

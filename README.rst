@@ -68,7 +68,7 @@ The magnitude of values between small and large makes it challenging to see any 
 It does not effectively draw attention to any changes in time apart from highlighting changes in a few key cateogires poorly.
 
 
-Steam chart v1
+Steam graph v1
 ^^^^^^^^^^^^^^
 
 After reviewing Andy Kirk´s book, Data Visualisation one option that jumped out for this case is the stream graph.
@@ -82,9 +82,39 @@ http://www.visualisingdata.com/2010/08/making-sense-of-streamgraphs/
 .. figure:: resources\images\Stream_Chart_v1.png
    :scale: 100 %
 
-   Stream graph production per year for each fiel, created using rawgraphs.io
+   Stream graph production per year for each field, created using rawgraphs.io
+
+The figure is still quite distracting.
+
+The colours are distracting and do not seperate the categories easily, there are too many labels which do not help convey a narrative.
+
+There is a steep decrease (a decline in total production) at the end of the chart, this is not highlighted cleary enough.
+
+Other technical issues include the years being incorrectly displayed.
 
 
+Stream graph v2
+^^^^^^^^^^^^^^^
+
+After reviewing the last attempt the narrative was not being delivered. Although this showed
+alterations in production as a rate per year it did not communicate total changes over time. It did not communicate a change
+in the History of the North Sea adequately.
+
+Some data processing was undertaken to create a new variable. Each fields reserves were taken and then the production per
+year was subtracted cumalatively. The idea being this would communicate changes over time by showing a decrease of the original total.
+
+.. figure:: resources\images\Stream_graph_v2.png
+   :scale: 100 %
+
+   Stream graph reserves remaining per year for each field, created using rawgraphs.io
+
+The result is a better vehicle to deliver the narrative of the history of the North Sea.
+
+This will now be taken into d3.js as this is the only way to get proper control on colour, labels, annotations
+and other features.
+
+Labels and categorical colors will be a challenge. It will likely be best to think of a way to limit
+the color range and labels to make it more digestable.
 
 Feedback
 --------

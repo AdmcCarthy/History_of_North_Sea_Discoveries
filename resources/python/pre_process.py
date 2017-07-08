@@ -3,6 +3,7 @@
 
 import os
 import pandas as pd
+import numpy as np
 
 
 def main():
@@ -39,15 +40,34 @@ def main():
     df_prod["cumalative_prod"] = df_prod.groupby("prfInformationCarrier")["prfPrdOeNetMillSm3"].transform(pd.Series.cumsum)
 
     def get_reserves(row):
+        """Use in pandas apply.
+    
+        returns a value of reserves
+        for each field name.
+        """
+        
         if row["prfInformationCarrier"] in df_reserv["fldName"].unique():
             return float(df_reserv[df_reserv["fldName"] == row["prfInformationCarrier"]]["fldRecoverableOE"])
         else:
-            return "NAN"
-
+            return None
+    
+    # Add a column containing total reserves for each field
     df_prod["reserves"] = df_prod.apply(get_reserves, axis=1)
 
+    # Remove any fields without a reserves value
+    df_prod = df_prod.dropna(subset=["reserves"])
+
+    # Subtract cumlative production from reserves
+    df_prod["remaining_oe"] = df_prod["reserves"] - df_prod["cumalative_prod"]
+
     print(df_prod.head(100))
+
+    out_file_loc = os.path.join(directory, "data", "reserves_production.csv")
+    df_prod.to_csv(out_file_loc)
+
     print("Finished")
+
+
 
 if __name__ == '__main__':
     main()
